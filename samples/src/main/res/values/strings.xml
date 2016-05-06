@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Samples</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="news">资讯</string>
+    <string name="live">直播</string>
+    <string name="markets">行情</string>
+    <string name="me">我</string>
+</resources>

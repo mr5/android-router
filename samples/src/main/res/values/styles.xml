@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="main_tab_icon">
+        <item name="android:textSize">48dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+</resources>
