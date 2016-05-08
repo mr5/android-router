@@ -3,6 +3,7 @@ package com.github.mr5.androidrouter;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Fragment;
+import android.provider.Settings;
 import android.test.ApplicationTestCase;
 
 /**
@@ -12,7 +13,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     public ApplicationTest() {
         super(Application.class);
-        Route route = new Route("/node/{id}", Activity.class, Fragment.class, Fragment.class);
-
+        assertEquals("hello", true, false);
+        System.out.println("hello");
     }
 }

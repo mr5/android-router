@@ -1,72 +1,101 @@
 package com.github.mr5.androidrouter;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by wscn on 16/4/28.
- */
-public class CompiledRoute implements Serializable {
-    private String[] variables;
-    private String[] tokens;
+public class CompiledRoute {
+    private List<String> variables;
     private Pattern regex;
-    private String[] pathVariables;
-    private String[] hostVariables;
-    private Pattern hostRegex;
-    private String[] hostTokens;
+    private String constantUrl;
+    private Route.TYPE type;
+    private Class<Activity> activityClass;
+    private LinkedList<Class<Fragment>> fragmentClasses;
+    private Map<String, String> queryDetermines;
+    private String anchor;
 
-    /**
-     * @param regex         The regular expression to use to match this route
-     * @param tokens        An array of tokens to use to generate URL for this route
-     * @param pathVariables An array of path variables
-     * @param hostRegex     Host regex
-     * @param hostTokens    Host tokens
-     * @param hostVariables An array of host variables
-     * @param variables     An array of variables (variables defined in the path and in the host patterns)
-     */
-    public CompiledRoute(
-            Pattern regex, String[] tokens, String[] pathVariables, Pattern hostRegex,
-            String[] hostTokens, String[] hostVariables, String[] variables
-    ) {
-        this.regex = regex;
-        this.tokens = tokens;
-        this.pathVariables = pathVariables;
-        this.hostRegex = hostRegex;
-        this.hostTokens = hostTokens;
-        this.hostVariables = hostVariables;
-        this.variables = variables;
-        AtomicInteger atomicInteger = new AtomicInteger();
-        atomicInteger.incrementAndGet();
+    public String getAnchor() {
+        return anchor;
     }
 
-    public String[] getVariables() {
+    public void setAnchor(String anchor) {
+        this.anchor = anchor;
+    }
+
+    public Map<String, String> getQueryDetermines() {
+        return queryDetermines;
+    }
+
+    public void setQueryDetermines(Map<String, String> queryDetermines) {
+        this.queryDetermines = queryDetermines;
+    }
+
+    public List<String> getVariables() {
         return variables;
     }
 
-    public String[] getTokens() {
-        return tokens;
+    public void setVariables(List<String> variables) {
+        this.variables = variables;
     }
 
     public Pattern getRegex() {
         return regex;
     }
 
-    public String[] getPathVariables() {
-        return pathVariables;
+    public void setRegex(Pattern regex) {
+        this.regex = regex;
     }
 
-    public String[] getHostVariables() {
-        return hostVariables;
+    public String getConstantUrl() {
+        return constantUrl;
     }
 
-    public Pattern getHostRegex() {
-        return hostRegex;
+    public void setConstantUrl(String constantUrl) {
+        this.constantUrl = constantUrl;
     }
 
-    public String[] getHostTokens() {
-        return hostTokens;
+    public Route.TYPE getType() {
+        return type;
+    }
+
+    public void setType(Route.TYPE type) {
+        this.type = type;
+    }
+
+    public Class<Activity> getActivityClass() {
+        return activityClass;
+    }
+
+    public void setActivityClass(Class<Activity> activityClass) {
+        this.activityClass = activityClass;
+    }
+
+    public LinkedList<Class<Fragment>> getFragmentClasses() {
+        return fragmentClasses;
+    }
+
+    public void setFragmentClasses(LinkedList<Class<Fragment>> fragmentClasses) {
+        this.fragmentClasses = fragmentClasses;
+    }
+
+    public Class<Fragment> getNextFragment(Class<Fragment> relativeFragment) {
+        if (fragmentClasses == null) {
+            return null;
+        }
+        int relativeFragmentPosition = fragmentClasses.indexOf(relativeFragment);
+        if (relativeFragmentPosition < 0) {
+            return null;
+        }
+        return fragmentClasses.get(relativeFragmentPosition + 1);
     }
 }

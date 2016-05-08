@@ -2,11 +2,11 @@ package com.github.mr5.androidrouter;
 
 import android.os.Bundle;
 
-public interface proxyRoute {
+public interface RouterProxy {
     /**
      * @param bundle        Android bundle
      * @param compiledRoute CompiledRoute
      * @return Return false when mismatching
      */
-    public boolean routeDispatch(Router router, Bundle bundle, CompiledRoute compiledRoute);
+    public boolean proxy(Router router, Bundle bundle, CompiledRoute compiledRoute);
 }

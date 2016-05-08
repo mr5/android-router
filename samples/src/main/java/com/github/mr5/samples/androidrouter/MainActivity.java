@@ -1,5 +1,6 @@
 package com.github.mr5.samples.androidrouter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     @BindView(R.id.tab_host)
     protected TabHost tabhost;

@@ -2,61 +2,59 @@ package com.github.mr5.androidrouter;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.support.annotation.MainThread;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.regex.Pattern;
 
-public class Route<P extends Activity & proxyRoute, F extends Fragment & proxyRoute> {
+public class Route {
     enum TYPE {
         DIRECTLY, PROXY
     }
 
     private String path = "/";
 
-    private String host = "";
-    private String[] schemes;
+    private HashMap<String, String> requirements = new HashMap<>();
 
-    private String[] methods;
-
-    private Map<String, String> defaults = new HashMap<>();
-
-    private Map<String, String> requirements = new HashMap<>();
-
-    private String[] options;
-
-    private String compiled;
-    private String[] condition;
     private Class<Activity> activityClass;
 
-    private Class<P> proxyActivityClass;
-
-    private LinkedList<Class<F>> passingFragments;
-
+    private Class proxyActivityClass;
+    private String anchor;
+    private LinkedList<String> passingFragmentClassNames;
+    private Map<String, String> queries = new HashMap<>();
+    private Pattern regex;
+    private String constantUrl;
 
     public Route(String path, Class<Activity> activityClass) {
         this.path = path;
-        this.defaults = defaults;
-
         this.activityClass = activityClass;
-        try {
-            URL url = new URL("http://qq.com");
-            System.out.println(url.getProtocol());
-            System.out.println(url.getHost());
-            System.out.println(url.getPath());
-            System.out.println(url.getQuery());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        this.bind("id", "\\d+").bind("xxx", "\\d+")
-                .bind("xxx", "xxx")
-                .bind("xxx", "xxxxddd").defaultValue("xxx", "1");
     }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
+    public Class getProxyActivityClass() {
+        return proxyActivityClass;
+    }
+
+    public Class<Activity> getActivityClass() {
+        return activityClass;
+    }
+
+    public LinkedList<String> getPassingFragmentClassNames() {
+        return passingFragmentClassNames;
+    }
+
+    public HashMap<String, String> getRequirements() {
+        return requirements;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
 
     /**
      * Repress var with given regex.
@@ -66,39 +64,81 @@ public class Route<P extends Activity & proxyRoute, F extends Fragment & proxyRo
      * @return this
      */
     public Route bind(String varName, String regex) {
-        if (requirements.containsKey(varName)) {
-            throw new IllegalStateException(
-                    String.format("Key %s has been bound before.", varName)
-            );
-        }
-        requirements.put(varName, regex);
+        requirements.put(varName, sanitizeRequirement(varName, regex));
         return this;
     }
 
-    public Route defaultValue(String varName, String defaultValue) {
-        defaults.put(varName, defaultValue);
-        return this;
-    }
-
-    public Route(String path, Class<P> proxyActivityClass, Class<F>... fragmentClasses) {
+    public <A extends Activity & RouterProxy, F extends Fragment & RouterProxy> Route(
+            String path,
+            Class<A> proxyActivityClass,
+            Class<F>... fragmentClasses) {
         this.path = path;
         this.proxyActivityClass = proxyActivityClass;
-        passingFragments = new LinkedList<>();
-        passingFragments.addAll(Arrays.asList(fragmentClasses));
+        passingFragmentClassNames = new LinkedList<>();
+        if (fragmentClasses != null && fragmentClasses.length > 0) {
+
+            for (Class<F> fragmentClass : fragmentClasses) {
+                passingFragmentClassNames.add(fragmentClass.getName());
+            }
+        }
+
     }
 
-    public Class<F> getNext(Class<F> relativeFragment) {
-        if (passingFragments == null) {
-            return null;
-        }
-        int relativeFragmentPosition = passingFragments.indexOf(relativeFragment);
-        if (relativeFragmentPosition < 0) {
-            return null;
-        }
-        return passingFragments.get(relativeFragmentPosition + 1);
+
+    public Map<String, String> getQueries() {
+        return queries;
     }
 
-    public String getHost() {
-        return host;
+    /**
+     * Set an anchor determine.
+     *
+     * @param anchor Anchor determine.
+     * @return Just for call chaining.
+     */
+    public Route setAnchor(String anchor) {
+        this.anchor = anchor;
+        return this;
+    }
+
+    /**
+     * Add a query determine.
+     *
+     * @param name  Query name.
+     * @param value Query value.
+     * @return Just for call chaining.
+     */
+    public Route addQuery(String name, String value) {
+        queries.put(name, value);
+        return this;
+    }
+
+
+    private String sanitizeRequirement(String key, String regex) {
+        if (regex == null || "".equals(regex)) {
+            throw new IllegalArgumentException(
+                    String.format("Routing requirement for \"%s\" cannot be empty.", key)
+            );
+        }
+        if (regex.startsWith("^")) {
+            if (regex.length() > 1) {
+                regex = regex.substring(1);
+            } else {
+                regex = "";
+            }
+        }
+        if (regex.endsWith("$")) {
+            if (regex.length() > 1) {
+                regex = regex.substring(regex.length() - 1);
+            } else {
+                regex = "";
+            }
+        }
+
+        if ("".equals(regex)) {
+            throw new IllegalArgumentException(
+                    String.format("Routing requirement for \"%s\" cannot be empty.", key)
+            );
+        }
+        return regex;
     }
 }

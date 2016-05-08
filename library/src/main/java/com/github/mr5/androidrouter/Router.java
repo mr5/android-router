@@ -15,9 +15,18 @@ public class Router {
     protected static Router sharedInstance;
     protected Map<String, Route> routeMap = new HashMap<>();
     protected UrlNotMatchedHandler urlNotMatchedHandler;
+    protected Map<String, Route> constantUrls = new HashMap<>();
 
     public void setUrlNotMatchedHandler(UrlNotMatchedHandler urlNotMatchedHandler) {
         this.urlNotMatchedHandler = urlNotMatchedHandler;
+    }
+
+    public Router add(Route route) {
+        if (route.getConstantUrl() != null) {
+            constantUrls.put(route.getConstantUrl(), route);
+        }
+
+        return this;
     }
 
     public void register(String urlPattern, Activity activity) {
@@ -53,14 +62,14 @@ public class Router {
     }
 
     /**
-     * Add route with activity as agent, it is useful for route to fragments.
+     * Add route with activity as proxy, it is useful for route to fragments.
      *
      * @param url           URL string.
      * @param activityClass Agent activity class.
      * @param fragments     All passing fragments, and last fragment is the destination.
-     * @param <A>           Activity with `proxyRoute` implementation.
+     * @param <A>           Activity with `RouterProxy` implementation.
      */
-    public <A extends Activity & proxyRoute> void add(String url, Class<A> activityClass, Fragment... fragments) {
+    public <A extends Activity & RouterProxy> void add(String url, Class<A> activityClass, Fragment... fragments) {
     }
 
     public void openFromFragment(
