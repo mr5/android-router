@@ -3,15 +3,22 @@ package com.github.mr5.androidrouter;
 import android.app.Activity;
 import android.app.Fragment;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+
+import com.google.code.regexp.Pattern;
 
 public class Route {
-    enum TYPE {
-        DIRECTLY, PROXY
-    }
+    public static final int TYPE_DIRECTLY = 1;
+    public static final int TYPE_PROXY = 2;
+    public static final String SCHEMA_HTTP = "http";
+    public static final String SCHEMA_HTTPS = "https";
+    public static final String SCHEMA_TEL = "tel";
+    public static final String SCHEMA_MAILTO = "mailto";
+    public static final String SCHEMA_ANY = "*";
 
     private String path = "/";
 
@@ -23,12 +30,26 @@ public class Route {
     private String anchor;
     private LinkedList<String> passingFragmentClassNames;
     private Map<String, String> queries = new HashMap<>();
-    private Pattern regex;
-    private String constantUrl;
+    private List<String> schemes;
 
-    public Route(String path, Class<Activity> activityClass) {
+    public Route(String path, Class<Activity> activityClass, String[] schemes) {
         this.path = path;
         this.activityClass = activityClass;
+        this.schemes = Arrays.asList(schemes);
+    }
+
+    public Route(String path, Class<Activity> activityClass) {
+        this(path, activityClass, new String[]{SCHEMA_ANY});
+    }
+
+    public List<String> getSchemes() {
+        return schemes;
+    }
+
+    public Route setSchemes(List<String> schemes) {
+        this.schemes = schemes;
+
+        return this;
     }
 
     public String getAnchor() {
@@ -68,21 +89,21 @@ public class Route {
         return this;
     }
 
-    public <A extends Activity & RouterProxy, F extends Fragment & RouterProxy> Route(
-            String path,
-            Class<A> proxyActivityClass,
-            Class<F>... fragmentClasses) {
-        this.path = path;
-        this.proxyActivityClass = proxyActivityClass;
-        passingFragmentClassNames = new LinkedList<>();
-        if (fragmentClasses != null && fragmentClasses.length > 0) {
-
-            for (Class<F> fragmentClass : fragmentClasses) {
-                passingFragmentClassNames.add(fragmentClass.getName());
-            }
-        }
-
-    }
+//    public <A extends Activity & RouterProxy, Fragment> Route(
+//            String path,
+//            Class<A> proxyActivityClass,
+//            Class<F>... fragmentClasses) {
+//        this.path = path;
+//        this.proxyActivityClass = proxyActivityClass;
+//        passingFragmentClassNames = new LinkedList<>();
+//        if (fragmentClasses != null && fragmentClasses.length > 0) {
+//
+//            for (Class<F> fragmentClass : fragmentClasses) {
+//                passingFragmentClassNames.add(fragmentClass.getName());
+//            }
+//        }
+//
+//    }
 
 
     public Map<String, String> getQueries() {
@@ -140,5 +161,9 @@ public class Route {
             );
         }
         return regex;
+    }
+
+    public String toString() {
+        return getPath();
     }
 }

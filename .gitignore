@@ -1,4 +1,5 @@
 .gradle
+/AndroidRouter.iml
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries

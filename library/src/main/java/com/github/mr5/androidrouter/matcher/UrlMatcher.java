@@ -7,6 +7,9 @@ import com.github.mr5.androidrouter.exception.URLNotMatchedException;
  * Created by wscn on 16/4/29.
  */
 public interface UrlMatcher {
+
+    public void addCompiledRoute(CompiledRoute route);
+
     /**
      * Tries to match a URL path with a set of routes.
      * <p>
@@ -17,5 +20,5 @@ public interface UrlMatcher {
      * @return Compiled route.
      * @throws URLNotMatchedException If the url could not be matched.
      */
-    public CompiledRoute match(String url) throws URLNotMatchedException;
+    public Request match(String url) throws URLNotMatchedException;
 }

@@ -2,60 +2,27 @@ package com.github.mr5.samples.androidrouter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.FrameStats;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class MainActivity extends Activity {
 
-    @BindView(R.id.tab_host)
-    protected TabHost tabhost;
-    @BindView(R.id.tabs)
-    protected TabWidget tabs;
-    @BindView(R.id.tab_content)
-    protected FrameLayout tabContent;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        TabHost.TabSpec newsPage = tabhost.newTabSpec("news")
-                .setIndicator(findViewById(R.id.tab_news))
-                .setContent(R.id.tab_news);
-        TabHost.TabSpec livePage = tabhost.newTabSpec("live")
-                .setIndicator(findViewById(R.id.tab_live))
-                .setContent(R.id.tab_live);
-        TabHost.TabSpec marketsPage = tabhost.newTabSpec("markets")
-                .setIndicator(findViewById(R.id.tab_markets))
-                .setContent(R.id.tab_markets);
-        TabHost.TabSpec mePage = tabhost.newTabSpec("me")
-                .setIndicator(findViewById(R.id.tab_me))
-                .setContent(R.id.tab_me);
-        tabhost.addTab(newsPage);
-        tabhost.addTab(livePage);
-        tabhost.addTab(marketsPage);
-        tabhost.addTab(mePage);
-    }
+        setContentView(R.layout.tabhost_container);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        startActivityForResult(new Intent(), 111);
-        return true;
+        TabHost tabs = (TabHost)this.findViewById(R.id.tabhost);
+        tabs.setup();
+
+        tabs.addTab(tabs.newTabSpec("one").setContent(R.id.tab1content).setIndicator("TAB 1"));
+        tabs.addTab(tabs.newTabSpec("two").setContent(R.id.tab2content).setIndicator("TAB 2"));
+        tabs.setCurrentTab(0);
     }
 
     @Override
