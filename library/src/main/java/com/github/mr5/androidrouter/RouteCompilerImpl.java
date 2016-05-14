@@ -17,7 +17,7 @@ public class RouteCompilerImpl implements RouteCompiler {
         compiledRoute.setVariables(variables);
         compiledRoute.setAnchor(route.getAnchor());
         compiledRoute.setType(Route.TYPE_DIRECTLY);
-
+        compiledRoute.setActivityClass(route.getActivityClass());
         if (variables == null || variables.size() < 1) {
             String constantUrl = route.getPath();
             if (route.getAnchor() != null) {

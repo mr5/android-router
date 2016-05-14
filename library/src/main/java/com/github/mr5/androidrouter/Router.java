@@ -3,11 +3,14 @@ package com.github.mr5.androidrouter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.CookieManager;
 
 import com.github.mr5.androidrouter.matcher.Request;
 import com.github.mr5.androidrouter.matcher.MismatchedHandler;
 import com.github.mr5.androidrouter.matcher.UrlMatcher;
+import com.github.mr5.androidrouter.matcher.UrlMatcherImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +25,15 @@ public class Router {
     protected Context context;
     public static final String BUNDLE_KEY_REQUEST = "_router_request";
 
-    public Router(UrlMatcher urlMatcher, RouteCompiler routeCompiler) {
+    public Router(UrlMatcher urlMatcher, RouteCompiler routeCompiler, Context context) {
         this.urlMatcher = urlMatcher;
         this.routeCompiler = routeCompiler;
+    }
+
+    public Router(Context context) {
+        this.context = context;
+        urlMatcher = new UrlMatcherImpl();
+        routeCompiler = new RouteCompilerImpl();
     }
 
     public Router setContext(Context context) {
@@ -47,6 +56,13 @@ public class Router {
         return this;
     }
 
+    public Router add(String path, Class<? extends Activity> activityClass) {
+        add(new Route(path, activityClass));
+
+        return this;
+    }
+
+
     public Router asShared() {
         sharedInstance = this;
         return this;
@@ -60,6 +76,28 @@ public class Router {
         open(url, new Bundle());
     }
 
+    public void openForResult(String url, int requestCode, Activity sourceActivity) {
+        openForResult(url, requestCode, sourceActivity, new Bundle());
+    }
+
+    public void openForResult(String url, int requestCode, Activity sourceActivity, Bundle bundle) {
+        Intent intent = getIntent(url, bundle, sourceActivity);
+        if (intent != null) {
+            sourceActivity.startActivityForResult(intent, requestCode);
+        }
+    }
+
+    /**
+     * Open url in browser.
+     *
+     * @param url
+     */
+    public void openExternal(String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
+    }
+
     public void open(String url, Context context) {
         open(url, context, new Bundle());
     }
@@ -68,21 +106,23 @@ public class Router {
         open(url, context, bundle);
     }
 
-    public void open(String url, Context context, Bundle bundle) {
+    protected Intent getIntent(String url, Bundle bundle, Context context) {
         Request request = urlMatcher.match(url);
         if (request.getCompiledRoute() == null) {
             if (mismatchedHandler != null) {
                 mismatchedHandler.run(request, this);
             }
-            return;
+            return null;
+        }
+        CompiledRoute compiledRoute = request.getCompiledRoute();
+        if (compiledRoute.getActivityClass() == null || compiledRoute.getActivityClass().equals(context.getClass())) {
+            return null;
         }
         Intent intent = new Intent(context, request.getCompiledRoute().getActivityClass());
         if (bundle == null) {
             bundle = new Bundle();
         }
-        if (context == null) {
-            context = this.context;
-        }
+
         if (request.getQueryVariables() != null) {
             for (String queryKey : request.getQueryVariables().keySet()) {
                 bundle.putString(queryKey, request.getQueryVariables().get(queryKey));
@@ -93,13 +133,24 @@ public class Router {
                 bundle.putString(queryKey, request.getPathVariables().get(queryKey));
             }
         }
-        request.setRefererClass(context.getClass().getName());
-        bundle.putParcelable(BUNDLE_KEY_REQUEST, request);
-        intent.putExtras(bundle);
-        if (!(context instanceof Activity)) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
 
-        context.startActivity(intent);
+        request.setRefererClass(context.getClass().getName());
+        //bundle.putParcelable(BUNDLE_KEY_REQUEST, request);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
+    public void open(String url, Context context, Bundle bundle) {
+        if (context == null) {
+            context = this.context;
+        }
+        Intent intent = getIntent(url, bundle, context);
+
+        if (intent != null) {
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            context.startActivity(intent);
+        }
     }
 }

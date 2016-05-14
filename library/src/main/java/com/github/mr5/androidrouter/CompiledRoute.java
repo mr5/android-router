@@ -18,7 +18,7 @@ public class CompiledRoute implements Cloneable, Parcelable {
     private Pattern regex;
     private String constantUrl;
     private int type;
-    private Class<Activity> activityClass;
+    private Class<? extends Activity> activityClass;
     private LinkedList<Class<Fragment>> fragmentClasses;
     private String anchor;
     private List<String> schemes;
@@ -82,11 +82,11 @@ public class CompiledRoute implements Cloneable, Parcelable {
         return this;
     }
 
-    public Class<Activity> getActivityClass() {
+    public Class<? extends Activity> getActivityClass() {
         return activityClass;
     }
 
-    public CompiledRoute setActivityClass(Class<Activity> activityClass) {
+    public CompiledRoute setActivityClass(Class<? extends Activity> activityClass) {
         this.activityClass = activityClass;
 
         return this;

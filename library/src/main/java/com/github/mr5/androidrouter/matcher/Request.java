@@ -5,18 +5,18 @@ import android.os.Parcelable;
 
 import com.github.mr5.androidrouter.CompiledRoute;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Request implements Parcelable {
     private Map<String, String> pathVariables;
     private Map<String, String> queryVariables;
     private CompiledRoute compiledRoute;
-    private String refererUrl;
+
     private String refererClass;
     private String url;
     private String scheme;
     private String host;
-
     private String anchor;
 
 
@@ -58,16 +58,6 @@ public class Request implements Parcelable {
 
     public String toString() {
         return getCompiledRoute().toString();
-    }
-
-    public String getRefererUrl() {
-        return refererUrl;
-    }
-
-    public Request setRefererUrl(String refererUrl) {
-        this.refererUrl = refererUrl;
-
-        return this;
     }
 
     public String getRefererClass() {
@@ -127,7 +117,6 @@ public class Request implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(refererUrl);
         parcel.writeString(refererClass);
         parcel.writeString(url);
         parcel.writeString(scheme);

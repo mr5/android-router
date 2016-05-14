@@ -5,6 +5,7 @@ import android.app.Fragment;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,25 +21,25 @@ public class Route {
     public static final String SCHEMA_MAILTO = "mailto";
     public static final String SCHEMA_ANY = "*";
 
-    private String path = "/";
+    protected String path = "/";
 
-    private HashMap<String, String> requirements = new HashMap<>();
+    protected HashMap<String, String> requirements = new HashMap<>();
 
-    private Class<Activity> activityClass;
+    protected Class<? extends Activity> activityClass;
 
-    private Class proxyActivityClass;
-    private String anchor;
-    private LinkedList<String> passingFragmentClassNames;
-    private Map<String, String> queries = new HashMap<>();
-    private List<String> schemes;
+    protected Class proxyActivityClass;
+    protected String anchor;
+    protected List<String> passingFragmentClassNames;
+    protected Map<String, String> queries = new HashMap<>();
+    protected List<String> schemes;
 
-    public Route(String path, Class<Activity> activityClass, String[] schemes) {
+    public Route(String path, Class<? extends Activity> activityClass, String[] schemes) {
         this.path = path;
         this.activityClass = activityClass;
         this.schemes = Arrays.asList(schemes);
     }
 
-    public Route(String path, Class<Activity> activityClass) {
+    public Route(String path, Class<? extends Activity> activityClass) {
         this(path, activityClass, new String[]{SCHEMA_ANY});
     }
 
@@ -60,11 +61,11 @@ public class Route {
         return proxyActivityClass;
     }
 
-    public Class<Activity> getActivityClass() {
+    public Class<? extends Activity> getActivityClass() {
         return activityClass;
     }
 
-    public LinkedList<String> getPassingFragmentClassNames() {
+    public List<String> getPassingFragmentClassNames() {
         return passingFragmentClassNames;
     }
 
@@ -116,23 +117,10 @@ public class Route {
      * @param anchor Anchor determine.
      * @return Just for call chaining.
      */
-    public Route setAnchor(String anchor) {
+    public Route anchor(String anchor) {
         this.anchor = anchor;
         return this;
     }
-
-    /**
-     * Add a query determine.
-     *
-     * @param name  Query name.
-     * @param value Query value.
-     * @return Just for call chaining.
-     */
-    public Route addQuery(String name, String value) {
-        queries.put(name, value);
-        return this;
-    }
-
 
     private String sanitizeRequirement(String key, String regex) {
         if (regex == null || "".equals(regex)) {
@@ -160,7 +148,16 @@ public class Route {
                     String.format("Routing requirement for \"%s\" cannot be empty.", key)
             );
         }
+
         return regex;
+    }
+
+    public static Route route(String path, Class<? extends Activity> activityClass) {
+        return new Route(path, activityClass);
+    }
+
+    public void addTo(Router router) {
+        router.add(this);
     }
 
     public String toString() {

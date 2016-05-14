@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TabHost;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-
+import com.github.mr5.androidrouter.Router;
 
 public class MainActivity extends Activity {
 
@@ -15,14 +17,21 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tabhost_container);
-
-        TabHost tabs = (TabHost)this.findViewById(R.id.tabhost);
-        tabs.setup();
-
-        tabs.addTab(tabs.newTabSpec("one").setContent(R.id.tab1content).setIndicator("TAB 1"));
-        tabs.addTab(tabs.newTabSpec("two").setContent(R.id.tab2content).setIndicator("TAB 2"));
-        tabs.setCurrentTab(0);
+        setContentView(R.layout.activity_main);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.main_layout);
+        int childCount = linearLayout.getChildCount();
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view instanceof TextView) {
+                    TextView textView = (TextView) view;
+                    Router.getShared().open(textView.getText().toString(), view.getContext());
+                }
+            }
+        };
+        for (int i = 0; i < childCount; i++) {
+            linearLayout.getChildAt(i).setOnClickListener(onClickListener);
+        }
     }
 
     @Override
@@ -33,9 +42,9 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -44,5 +53,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public class ClickHandlers {
+
     }
 }

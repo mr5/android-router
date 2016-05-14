@@ -198,29 +198,32 @@ public class UrlMatcherImpl implements UrlMatcher {
         }
     }
 
-    protected Request searchCertainRoute(URL url, String urlStr4match, Request request) {
+    protected void searchCertainRoute(URL url, String urlStr4match, Request request) {
         String anchor = url.getRef();
         String searchKey;
         if (anchor != null) {
             searchKey = url.getProtocol() + "://" + urlStr4match + "#" + anchor;
             if (constantsRoutes.containsKey(searchKey)) {
-                return request.setCompiledRoute(constantsRoutes.get(searchKey));
+                request.setCompiledRoute(constantsRoutes.get(searchKey));
+                return;
             }
             searchKey = Route.SCHEMA_ANY + "://" + urlStr4match + "#" + anchor;
             if (constantsRoutes.containsKey(searchKey)) {
-                return request.setCompiledRoute(constantsRoutes.get(searchKey));
+                request.setCompiledRoute(constantsRoutes.get(searchKey));
+                return;
             }
         }
         searchKey = url.getProtocol() + "://" + urlStr4match;
         if (constantsRoutes.containsKey(searchKey)) {
-            return request.setCompiledRoute(constantsRoutes.get(searchKey));
+            request.setCompiledRoute(constantsRoutes.get(searchKey));
+            return;
         }
         searchKey = Route.SCHEMA_ANY + "://" + urlStr4match;
         if (constantsRoutes.containsKey(searchKey)) {
-            return request.setCompiledRoute(constantsRoutes.get(searchKey));
+            request.setCompiledRoute(constantsRoutes.get(searchKey));
+            return;
         }
 
-        return null;
     }
 
     public static Map<String, String> splitQuery(String query) {

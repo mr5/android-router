@@ -1,47 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TabHost
-        android:id="@+id/tabhost"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <TextView
+        style="@style/link"
+        android:text="http://github.com/" />
 
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="105dp"/>
+    <TextView
+        style="@style/link"
+        android:text="http://github.com/mr5" />
 
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:paddingTop="65dp">
-
-
-            <LinearLayout
-                android:id="@+id/tab1content"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#00008B">
-
-                <!--  Put Tab 1 Views in here -->
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/tab2content"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#FFFF00">
-
-                <!--  Put Tab 2 Views in here -->
-
-            </LinearLayout>
-
-
-        </FrameLayout>
-    </TabHost>
+    <TextView
+        style="@style/link"
+        android:text="http://github.com/mr5/android-router" />
 </LinearLayout>
