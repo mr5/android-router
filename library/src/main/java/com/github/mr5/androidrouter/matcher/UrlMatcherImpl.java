@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.mr5.androidrouter.Request;
 import com.github.mr5.androidrouter.Route;
 import com.google.code.regexp.Matcher;
 

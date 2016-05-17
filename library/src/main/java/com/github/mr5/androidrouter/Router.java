@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.CookieManager;
 
-import com.github.mr5.androidrouter.matcher.Request;
 import com.github.mr5.androidrouter.matcher.MismatchedHandler;
 import com.github.mr5.androidrouter.matcher.UrlMatcher;
 import com.github.mr5.androidrouter.matcher.UrlMatcherImpl;

@@ -1,12 +1,9 @@
-package com.github.mr5.androidrouter.matcher;
+package com.github.mr5.androidrouter;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.github.mr5.androidrouter.CompiledRoute;
-
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class Request implements Parcelable {

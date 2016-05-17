@@ -2,6 +2,7 @@ package com.github.mr5.androidrouter.matcher;
 
 import com.github.mr5.androidrouter.BuildConfig;
 import com.github.mr5.androidrouter.CompiledRoute;
+import com.github.mr5.androidrouter.Request;
 import com.google.code.regexp.Pattern;
 
 import org.junit.Test;
