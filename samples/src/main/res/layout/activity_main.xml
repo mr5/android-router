@@ -15,4 +15,7 @@
     <TextView
         style="@style/link"
         android:text="http://github.com/mr5/android-router" />
+    <TextView
+        style="@style/link"
+        android:text="http://github.com/?openExternal" />
 </LinearLayout>

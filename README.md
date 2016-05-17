@@ -1,35 +1,73 @@
+## Get startted
+添加依赖
+```groovy
+compile 'com.github.mr5:android-router:0.1.1-SNAPSHOT'
+
+```
+## 初始化路由
+```java
+import com.github.mr5.androidrouter.Router;
+import static com.github.mr5.androidrouter.Route.route;
+
+public class Application extends android.app.Application {
+
+    public void onCreate() {
+        super.onCreate();
+        // 在 Router 实例上调用 asShared() 方法，后续可以通过静态方法 getShared() 得到。
+        Router router = new Router(getApplicationContext()).asShared();
+	}
+}
+```
+
 ## 声明路由
 
 声明无变量路由：
 
-```
-github.com/site/terms
+```java
+Router.getShared().add(new Route("github.com/site/terms", SiteTermsActivity.class));
 ```
 
 有变量时，使用 `{}` 包裹变量名：
 
-```
-github.com/{vendor}/{repository}
 
-{vendor}.github.io/
+```java
+Router.getShared().add(new Route("github.com/{vendor}/{repository}", RespositoryActivity.class));
+
+Router.getShared().add(new Route("{vendor}.github.io/", PagesActivity.class));
+
 ```
+
 使用正则表达式可限定变量的内容格式：
 
 ```java
-new Route("github.com/{vendor}/{repository}")
+Route route = new Route("github.com/{vendor}/{repository}")
 	.bind("vendor", "[\\w-]+")
 	.bind("repository", "[\\w-]+");
+	
+Router.getShared().add(route);
+
 ```
 
 还可以声明 anchor（锚点）匹配：
 
+
 ```java
-new Route("github.com/{vendor}/{repository}")
+Route route = new Route("github.com/{vendor}/{repository}")
 	.bind("vendor", "[\\w-]+")
 	.bind("repository", "[\\w-]+")
 	.anchor("comments");
+Router.getShared().add(route);
 	
-# 将匹配 github.com/mr5/android-router#comments	
+// 将匹配 github.com/mr5/android-router#comments	
+```
+
+链式调用
+
+```java
+		// `route` 方法通过 import static com.github.mr5.androidrouter.Route.route; 类似 RouteBuilder 的概念，不过最后需要调用 addTo 来添加到指定 Router，参数留空则默认添加到 `Router.getShared()`
+        route("github.com/{vendor}", VendorActivity.class).bind("vendor", "[\\w-]+").addTo(Router.getShared());
+        route("github.com/{vendor}/{repository}", RepositoryActivity.class)
+                .bind("vendor", "[\\w-]+").bind("repository", "[\\w-]+").addTo(Router.getShared());
 ```
 
 ## 匹配优先级规则

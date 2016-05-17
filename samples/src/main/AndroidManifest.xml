@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name=".RepositoryActivity"
-            android:label="Repository page">
+            android:label="Repository page"
+            android:launchMode="singleInstance">
         </activity>
     </application>
 </manifest>

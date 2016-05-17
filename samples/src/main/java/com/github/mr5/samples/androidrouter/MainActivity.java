@@ -25,7 +25,11 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (view instanceof TextView) {
                     TextView textView = (TextView) view;
-                    Router.getShared().open(textView.getText().toString(), view.getContext());
+                    String url = textView.getText().toString();
+                    if (url.endsWith("openExternal")) {
+                        Router.getShared().openExternal(url);
+                    }
+                    Router.getShared().open(url, view.getContext());
                 }
             }
         };

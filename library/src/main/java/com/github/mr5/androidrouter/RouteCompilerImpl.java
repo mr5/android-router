@@ -17,7 +17,7 @@ public class RouteCompilerImpl implements RouteCompiler {
         compiledRoute.setVariables(variables);
         compiledRoute.setAnchor(route.getAnchor());
         compiledRoute.setType(Route.TYPE_DIRECTLY);
-        compiledRoute.setActivityClass(route.getActivityClass());
+        compiledRoute.setActivityClass(route.getActivityClass().getName());
         if (variables == null || variables.size() < 1) {
             String constantUrl = route.getPath();
             if (route.getAnchor() != null) {
@@ -28,14 +28,17 @@ public class RouteCompilerImpl implements RouteCompiler {
             String regexString = compileRegex(route, variables);
             compiledRoute.setRegex(Pattern.compile(regexString));
         }
-        if (route.getProxyActivityClass() != null) {
-            if (route.getPassingFragmentClassNames() == null
-                    || route.getPassingFragmentClassNames().size() < 1) {
-                throw new IllegalArgumentException(String.format(
-                        "Proxy activity must define passing fragments.(%s)",
-                        route.getPath()
-                ));
+        if (route.getProxyDestIdentify() != null) {
+            //compiledRoute
+            compiledRoute.setType(Route.TYPE_PROXY);
+        }
+        if (route.getMiddlewares() != null
+                && route.getMiddlewares().size() > 0) {
+            ArrayList<String> fragmentClassNames = new ArrayList<>();
+            for (Class clazz : route.getMiddlewares()) {
+                fragmentClassNames.add(clazz.getName());
             }
+            compiledRoute.setMiddlewares(fragmentClassNames);
             compiledRoute.setType(Route.TYPE_PROXY);
         }
         return compiledRoute;

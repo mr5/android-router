@@ -1,16 +1,11 @@
 package com.github.mr5.androidrouter;
 
 import android.app.Activity;
-import android.app.Fragment;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.code.regexp.Pattern;
 
 public class Route {
     public static final int TYPE_DIRECTLY = 1;
@@ -27,11 +22,11 @@ public class Route {
 
     protected Class<? extends Activity> activityClass;
 
-    protected Class proxyActivityClass;
     protected String anchor;
-    protected List<String> passingFragmentClassNames;
+    protected List<Class<? extends RouterProxy>> middlewares;
     protected Map<String, String> queries = new HashMap<>();
     protected List<String> schemes;
+    protected String proxyDestIdentify;
 
     public Route(String path, Class<? extends Activity> activityClass, String[] schemes) {
         this.path = path;
@@ -57,17 +52,14 @@ public class Route {
         return anchor;
     }
 
-    public Class getProxyActivityClass() {
-        return proxyActivityClass;
+    public void setActivityClass(Class<? extends Activity> activityClass) {
+        this.activityClass = activityClass;
     }
 
     public Class<? extends Activity> getActivityClass() {
         return activityClass;
     }
 
-    public List<String> getPassingFragmentClassNames() {
-        return passingFragmentClassNames;
-    }
 
     public HashMap<String, String> getRequirements() {
         return requirements;
@@ -90,21 +82,26 @@ public class Route {
         return this;
     }
 
-//    public <A extends Activity & RouterProxy, Fragment> Route(
-//            String path,
-//            Class<A> proxyActivityClass,
-//            Class<F>... fragmentClasses) {
-//        this.path = path;
-//        this.proxyActivityClass = proxyActivityClass;
-//        passingFragmentClassNames = new LinkedList<>();
-//        if (fragmentClasses != null && fragmentClasses.length > 0) {
-//
-//            for (Class<F> fragmentClass : fragmentClasses) {
-//                passingFragmentClassNames.add(fragmentClass.getName());
-//            }
-//        }
-//
-//    }
+    public Route(
+            String path,
+            Class<? extends Activity> proxyActivityClass,
+            String destIdentify
+    ) {
+        this.path = path;
+        this.activityClass = proxyActivityClass;
+        this.proxyDestIdentify = destIdentify;
+    }
+
+    public Route(
+            String path,
+            Class<? extends Activity> proxyActivityClass,
+            String proxyDestIdentify,
+            Class<? extends RouterProxy>... middlewares) {
+        this.path = path;
+        this.activityClass = proxyActivityClass;
+        this.middlewares = Arrays.asList(middlewares);
+        this.proxyDestIdentify = proxyDestIdentify;
+    }
 
 
     public Map<String, String> getQueries() {
@@ -158,6 +155,26 @@ public class Route {
 
     public void addTo(Router router) {
         router.add(this);
+    }
+
+    public void addTo() {
+        Router.getShared().add(this);
+    }
+
+    public List<Class<? extends RouterProxy>> getMiddlewares() {
+        return middlewares;
+    }
+
+    public void setMiddlewares(List<Class<? extends RouterProxy>> middlewares) {
+        this.middlewares = middlewares;
+    }
+
+    public String getProxyDestIdentify() {
+        return proxyDestIdentify;
+    }
+
+    public void setProxyDestIdentify(String proxyDestIdentify) {
+        this.proxyDestIdentify = proxyDestIdentify;
     }
 
     public String toString() {

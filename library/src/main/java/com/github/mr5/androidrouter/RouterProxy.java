@@ -1,12 +1,14 @@
 package com.github.mr5.androidrouter;
 
+import android.app.Fragment;
 import android.os.Bundle;
+
+import com.github.mr5.androidrouter.matcher.Request;
 
 public interface RouterProxy {
     /**
-     * @param bundle        Android bundle
-     * @param compiledRoute CompiledRoute
-     * @return Return false when mismatching
+     * @param request
+     * @return
      */
-    public boolean proxy(Router router, Bundle bundle, CompiledRoute compiledRoute);
+    public RouterProxy proxy(Request request, String nextClassName);
 }

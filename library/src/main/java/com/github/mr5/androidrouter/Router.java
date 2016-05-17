@@ -95,6 +95,7 @@ public class Router {
     public void openExternal(String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -115,10 +116,19 @@ public class Router {
             return null;
         }
         CompiledRoute compiledRoute = request.getCompiledRoute();
-        if (compiledRoute.getActivityClass() == null || compiledRoute.getActivityClass().equals(context.getClass())) {
+
+        String activityClassName = compiledRoute.getActivityClass();
+        Class activityClass = null;
+        try {
+            activityClass = Class.forName(activityClassName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (activityClass == null) {
             return null;
         }
-        Intent intent = new Intent(context, request.getCompiledRoute().getActivityClass());
+        Intent intent = new Intent(context, activityClass);
         if (bundle == null) {
             bundle = new Bundle();
         }
@@ -135,7 +145,7 @@ public class Router {
         }
 
         request.setRefererClass(context.getClass().getName());
-        //bundle.putParcelable(BUNDLE_KEY_REQUEST, request);
+        bundle.putParcelable(BUNDLE_KEY_REQUEST, request);
         intent.putExtras(bundle);
         return intent;
     }
@@ -152,5 +162,21 @@ public class Router {
             }
             context.startActivity(intent);
         }
+    }
+
+    public Request getRequest(Bundle bundle) {
+        return bundle.getParcelable(BUNDLE_KEY_REQUEST);
+    }
+
+    public void proxy(Bundle bundle, RouterProxy routerProxy) {
+        proxy(getRequest(bundle), routerProxy);
+    }
+
+    public void proxy(Request request, RouterProxy routerProxy) {
+        if (routerProxy == null) {
+            return;
+        }
+        String nextClassName = request.getCompiledRoute().getNextFragment(routerProxy.getClass().getName());
+        routerProxy.proxy(request, nextClassName);
     }
 }

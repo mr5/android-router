@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.github.mr5.androidrouter.CompiledRoute;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class Request implements Parcelable {
 
     public Request() {
     }
+
 
     public Map<String, String> getPathVariables() {
         return pathVariables;
@@ -117,12 +119,39 @@ public class Request implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeMap(pathVariables);
+        parcel.writeMap(queryVariables);
+        parcel.writeParcelable(compiledRoute, i);
         parcel.writeString(refererClass);
         parcel.writeString(url);
         parcel.writeString(scheme);
         parcel.writeString(host);
-        parcel.writeMap(getQueryVariables());
-        parcel.writeMap(getPathVariables());
         parcel.writeString(anchor);
     }
+
+    protected Request(Parcel in) {
+        pathVariables = new HashMap<>();
+        queryVariables = new HashMap<>();
+
+        in.readMap(pathVariables, HashMap.class.getClassLoader());
+        in.readMap(queryVariables, HashMap.class.getClassLoader());
+        compiledRoute = in.readParcelable(CompiledRoute.class.getClassLoader());
+        refererClass = in.readString();
+        url = in.readString();
+        scheme = in.readString();
+        host = in.readString();
+        anchor = in.readString();
+    }
+
+    public static final Creator<Request> CREATOR = new Creator<Request>() {
+        @Override
+        public Request createFromParcel(Parcel in) {
+            return new Request(in);
+        }
+
+        @Override
+        public Request[] newArray(int size) {
+            return new Request[size];
+        }
+    };
 }

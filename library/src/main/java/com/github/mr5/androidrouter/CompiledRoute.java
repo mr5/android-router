@@ -1,27 +1,26 @@
 package com.github.mr5.androidrouter;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.code.regexp.Pattern;
-import com.google.code.regexp.Matcher;
 
-public class CompiledRoute implements Cloneable, Parcelable {
+public class CompiledRoute implements Parcelable {
     private List<String> variables;
     private Pattern regex;
     private String constantUrl;
     private int type;
-    private Class<? extends Activity> activityClass;
-    private LinkedList<Class<Fragment>> fragmentClasses;
+    private String activityClass;
+    private String proxyDestIdentify;
+    private List<String> middlewares;
     private String anchor;
     private List<String> schemes;
+
+    public CompiledRoute() {
+    }
+
 
     public List<String> getSchemes() {
         return schemes;
@@ -41,6 +40,30 @@ public class CompiledRoute implements Cloneable, Parcelable {
         this.type = type;
 
         return this;
+    }
+
+    public String getActivityClass() {
+        return activityClass;
+    }
+
+    public void setActivityClass(String activityClass) {
+        this.activityClass = activityClass;
+    }
+
+    public String getProxyDestIdentify() {
+        return proxyDestIdentify;
+    }
+
+    public void setProxyDestIdentify(String proxyDestIdentify) {
+        this.proxyDestIdentify = proxyDestIdentify;
+    }
+
+    public List<String> getMiddlewares() {
+        return middlewares;
+    }
+
+    public void setMiddlewares(List<String> middlewares) {
+        this.middlewares = middlewares;
     }
 
     public String getAnchor() {
@@ -82,35 +105,13 @@ public class CompiledRoute implements Cloneable, Parcelable {
         return this;
     }
 
-    public Class<? extends Activity> getActivityClass() {
-        return activityClass;
-    }
-
-    public CompiledRoute setActivityClass(Class<? extends Activity> activityClass) {
-        this.activityClass = activityClass;
-
-        return this;
-    }
-
-    public LinkedList<Class<Fragment>> getFragmentClasses() {
-        return fragmentClasses;
-    }
-
-    public CompiledRoute setFragmentClasses(LinkedList<Class<Fragment>> fragmentClasses) {
-        this.fragmentClasses = fragmentClasses;
-
-        return this;
-    }
-
-    public Class<Fragment> getNextFragment(Class<Fragment> relativeFragment) {
-        if (fragmentClasses == null) {
-            return null;
+    public String getNextFragment(String fragmentName) {
+        int index = middlewares.indexOf(fragmentName);
+        if (index >= 0 && index < middlewares.size()) {
+            return middlewares.get(index + 1);
         }
-        int relativeFragmentPosition = fragmentClasses.indexOf(relativeFragment);
-        if (relativeFragmentPosition < 0) {
-            return null;
-        }
-        return fragmentClasses.get(relativeFragmentPosition + 1);
+
+        return null;
     }
 
     public String toString() {
@@ -135,38 +136,38 @@ public class CompiledRoute implements Cloneable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-//        private List<String> variables;
-//        private Pattern regex;
-//        private String constantUrl;
-//        private Route.TYPE type;
-//        private Class<Activity> activityClass;
-//        private LinkedList<Class<Fragment>> fragmentClasses;
-//        private String anchor;
-//        private List<String> schemes;
-        parcel.writeList(getVariables());
-        parcel.writeString(getRegex().toString());
-        parcel.writeString(getConstantUrl());
-        parcel.writeInt(getType());
-        parcel.writeString(getActivityClass().toString());
-        parcel.writeList(getFragmentClasses());
-        parcel.writeString(getAnchor());
-        parcel.writeList(getSchemes());
+        parcel.writeList(variables);
+        parcel.writeString(regex.toString());
+        parcel.writeString(constantUrl);
+        parcel.writeInt(type);
+        parcel.writeString(activityClass);
+        parcel.writeString(proxyDestIdentify);
+        parcel.writeList(middlewares);
+        parcel.writeString(anchor);
+        parcel.writeList(schemes);
     }
 
-    private void readFromParcel(Parcel in) {
-//        mObjList = (MyClass[]) in.readParcelableArray(
-//                com.myApp.MyClass.class.getClassLoader()));
-        ClassLoader classLoader = CompiledRoute.class.getClassLoader();
-//        setVariables();
-        List<String> variables = new ArrayList<>();
-        in.readList(variables, ArrayList.class.getClassLoader());
-        setRegex(Pattern.compile(in.readString()));
-        setConstantUrl(in.readString());
-        setType(in.readInt());
-//        try {
-//            setActivityClass(Class.forName(in.readString()));
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
+    protected CompiledRoute(Parcel in) {
+        variables = in.createStringArrayList();
+        regex = Pattern.compile(in.readString());
+        constantUrl = in.readString();
+        type = in.readInt();
+        activityClass = in.readString();
+        proxyDestIdentify = in.readString();
+        middlewares = in.createStringArrayList();
+        anchor = in.readString();
+        schemes = in.createStringArrayList();
     }
+
+    public static final Creator<CompiledRoute> CREATOR = new Creator<CompiledRoute>() {
+        @Override
+        public CompiledRoute createFromParcel(Parcel in) {
+            return new CompiledRoute(in);
+        }
+
+        @Override
+        public CompiledRoute[] newArray(int size) {
+            return new CompiledRoute[size];
+        }
+    };
 }
