@@ -19,3 +19,6 @@ android:
     - android-sdk-license-c81a61d9
 script:
     -  ./gradlew clean :library:build :library:connectedCheck coveralls
+
+after_success:
+    - ./gradlew :library:uploadArchives
