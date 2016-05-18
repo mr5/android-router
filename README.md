@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mr5/android-router.svg)](https://travis-ci.org/mr5/android-router)
 [![Coveralls](https://coveralls.io/repos/github/mr5/android-router/badge.svg?branch=master
-)](https://coveralls.io/repos/github/mr5/android-router/badge.svg?branch=master
-)
+)](https://coveralls.io/github/mr5/android-router)
 ## Get startted
 添加依赖
 ```groovy
