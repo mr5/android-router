@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
+@Config(constants = BuildConfig.class)
 public class UrlMatcherImplTest {
     @Test
     public void testMatch() {

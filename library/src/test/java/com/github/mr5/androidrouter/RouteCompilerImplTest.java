@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
+@Config(constants = BuildConfig.class)
 public class RouteCompilerImplTest {
     @Test
     public void testCompileRegex() {
