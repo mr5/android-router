@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/mr5/android-router.svg)](https://travis-ci.org/mr5/android-router)
 [![Coveralls](https://coveralls.io/repos/github/mr5/android-router/badge.svg?branch=master
 )](https://coveralls.io/github/mr5/android-router)
-## Get startted
+## Getting started
 添加依赖
 ```groovy
 compile 'com.github.mr5:android-router:0.1.1-SNAPSHOT'
@@ -83,7 +83,7 @@ route("github.com/{vendor}/{repository}", RepositoryActivity.class)
 ```java
 // `this` is current Context
 Router.getShared().open("https://github.com", this);
-// Open for result, `this` is current Context
+// Open for result, like `startActivityForResult`,  `this` is current Context
 Router.getShared().openForResult("https://github.com", this, YOUR_REQUEST_CODE);
 // open in browser
 Router.getShared().openExternal("https://github.com");
