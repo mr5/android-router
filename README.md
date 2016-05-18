@@ -72,11 +72,22 @@ Router.getShared().add(route);
 ```java
 route("github.com/{vendor}", VendorActivity.class)
 	.bind("vendor", "[\\w-]+")
-	.addTo(Router.getShared());
+	.addTo(Router.getShared()); // equals to .addTo();
 route("github.com/{vendor}/{repository}", RepositoryActivity.class)
 	.bind("vendor", "[\\w-]+")
 	.bind("repository", "[\\w-]+")
 	.addTo(Router.getShared());
+```
+## 打开网址
+
+```java
+// `this` is current Context
+Router.getShared().open("https://github.com", this);
+// Open for result, `this` is current Context
+Router.getShared().openForResult("https://github.com", this, YOUR_REQUEST_CODE);
+// open in browser
+Router.getShared().openExternal("https://github.com");
+
 ```
 
 ## 匹配优先级规则

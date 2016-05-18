@@ -74,11 +74,33 @@ public class Router {
         open(url, new Bundle());
     }
 
-    public void openForResult(String url, int requestCode, Activity sourceActivity) {
-        openForResult(url, requestCode, sourceActivity, new Bundle());
+    public void open(String url, Context context) {
+        open(url, context, new Bundle());
     }
 
-    public void openForResult(String url, int requestCode, Activity sourceActivity, Bundle bundle) {
+    public void open(String url, Bundle bundle) {
+        open(url, context, bundle);
+    }
+
+    public void open(String url, Context context, Bundle bundle) {
+        if (context == null) {
+            context = this.context;
+        }
+        Intent intent = getIntent(url, bundle, context);
+
+        if (intent != null) {
+            if (!(context instanceof Activity)) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+            context.startActivity(intent);
+        }
+    }
+
+    public void openForResult(String url, Activity sourceActivity, int requestCode) {
+        openForResult(url, sourceActivity, requestCode, new Bundle());
+    }
+
+    public void openForResult(String url, Activity sourceActivity, int requestCode, Bundle bundle) {
         Intent intent = getIntent(url, bundle, sourceActivity);
         if (intent != null) {
             sourceActivity.startActivityForResult(intent, requestCode);
@@ -97,13 +119,6 @@ public class Router {
         context.startActivity(intent);
     }
 
-    public void open(String url, Context context) {
-        open(url, context, new Bundle());
-    }
-
-    public void open(String url, Bundle bundle) {
-        open(url, context, bundle);
-    }
 
     protected Intent getIntent(String url, Bundle bundle, Context context) {
         Request request = urlMatcher.match(url);
@@ -148,19 +163,6 @@ public class Router {
         return intent;
     }
 
-    public void open(String url, Context context, Bundle bundle) {
-        if (context == null) {
-            context = this.context;
-        }
-        Intent intent = getIntent(url, bundle, context);
-
-        if (intent != null) {
-            if (!(context instanceof Activity)) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            context.startActivity(intent);
-        }
-    }
 
     public Request getRequest(Bundle bundle) {
         return bundle.getParcelable(BUNDLE_KEY_REQUEST);
