@@ -1,3 +1,7 @@
+## Android router
+
+[![Build Status](https://travis-ci.org/mr5/android-router.svg)](https://travis-ci.org/mr5/android-router)
+
 ## Get startted
 添加依赖
 ```groovy
