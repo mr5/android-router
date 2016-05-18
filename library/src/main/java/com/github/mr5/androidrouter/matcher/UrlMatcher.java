@@ -11,15 +11,5 @@ public interface UrlMatcher {
 
     public void addCompiledRoute(CompiledRoute route);
 
-    /**
-     * Tries to match a URL path with a set of routes.
-     * <p>
-     * If the matcher can not find information, it must throw one of the exceptions documented
-     * below.
-     * </p>
-     *
-     * @return Compiled route.
-     * @throws URLNotMatchedException If the url could not be matched.
-     */
-    public Request match(String url) throws URLNotMatchedException;
+    public Request match(String url);
 }

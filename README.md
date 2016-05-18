@@ -62,9 +62,9 @@ Router.getShared().add(route);
 ```
 
 链式调用
+`route` 方法通过 `import static com.github.mr5.androidrouter.Route.route` 得到，类似 Builder 的概念，不过最后需要调用 addTo 来添加到指定 Router，`addTo` 方法不传参数则默认添加到 `Router.getShared()`
 
 ```java
-// `route` 方法通过 import static com.github.mr5.androidrouter.Route.route; 类似 RouteBuilder 的概念，不过最后需要调用 addTo 来添加到指定 Router，`addTo` 方法不传参数则默认添加到 `Router.getShared()`
 route("github.com/{vendor}", VendorActivity.class)
 	.bind("vendor", "[\\w-]+")
 	.addTo(Router.getShared());

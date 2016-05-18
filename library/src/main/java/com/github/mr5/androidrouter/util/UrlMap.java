@@ -59,7 +59,7 @@ public class UrlMap {
      *
      * @param group URL group name, such as `main`/`api`
      * @param uri   URI without scheme and host, `group` param will be discard when scheme and host given.
-     * @param query Query string append to URL, like `param1=value1&pamra2=value2`.
+     * @param query Query string append to URL, like `param1=value1&amp;pamra2=value2`;
      * @return Absolutely URL
      */
     public String resolve(String group, String uri, String query) {
