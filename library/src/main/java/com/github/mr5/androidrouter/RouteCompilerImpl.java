@@ -72,8 +72,6 @@ public class RouteCompilerImpl implements RouteCompiler {
             );
         }
 
-        // Remove literal pattern Strings (\Q and \E)
-        //patternString = patternString.substring(2, patternString.length() - 2);
         return patternString;
     }
 

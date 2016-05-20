@@ -10,11 +10,11 @@ import java.util.Map;
 public class Route {
     public static final int TYPE_DIRECTLY = 1;
     public static final int TYPE_PROXY = 2;
-    public static final String SCHEMA_HTTP = "http";
-    public static final String SCHEMA_HTTPS = "https";
-    public static final String SCHEMA_TEL = "tel";
-    public static final String SCHEMA_MAILTO = "mailto";
-    public static final String SCHEMA_ANY = "*";
+    public static final String SCHEME_HTTP = "http";
+    public static final String SCHEME_HTTPS = "https";
+    public static final String SCHEME_TEL = "tel";
+    public static final String SCHEME_MAILTO = "mailto";
+    public static final String SCHEME_ANY = "*";
 
     protected String path = "/";
 
@@ -35,7 +35,7 @@ public class Route {
     }
 
     public Route(String path, Class<? extends Activity> activityClass) {
-        this(path, activityClass, new String[]{SCHEMA_ANY});
+        this(path, activityClass, new String[]{SCHEME_ANY});
     }
 
     public List<String> getSchemes() {
@@ -134,7 +134,7 @@ public class Route {
         }
         if (regex.endsWith("$")) {
             if (regex.length() > 1) {
-                regex = regex.substring(regex.length() - 1);
+                regex = regex.substring(0, regex.length() - 1);
             } else {
                 regex = "";
             }

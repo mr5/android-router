@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.google.code.regexp.Pattern;
 
@@ -46,24 +47,30 @@ public class CompiledRoute implements Parcelable {
         return activityClass;
     }
 
-    public void setActivityClass(String activityClass) {
+    public CompiledRoute setActivityClass(String activityClass) {
         this.activityClass = activityClass;
+
+        return this;
     }
 
     public String getProxyDestIdentify() {
         return proxyDestIdentify;
     }
 
-    public void setProxyDestIdentify(String proxyDestIdentify) {
+    public CompiledRoute setProxyDestIdentify(String proxyDestIdentify) {
         this.proxyDestIdentify = proxyDestIdentify;
+
+        return this;
     }
 
     public List<String> getMiddlewares() {
         return middlewares;
     }
 
-    public void setMiddlewares(List<String> middlewares) {
+    public CompiledRoute setMiddlewares(List<String> middlewares) {
         this.middlewares = middlewares;
+
+        return this;
     }
 
     public String getAnchor() {
@@ -105,9 +112,9 @@ public class CompiledRoute implements Parcelable {
         return this;
     }
 
-    public String getNextFragment(String fragmentName) {
+    public String getNextMiddleware(String fragmentName) {
         int index = middlewares.indexOf(fragmentName);
-        if (index >= 0 && index < middlewares.size()) {
+        if (index >= 0 && index < middlewares.size() - 1) {
             return middlewares.get(index + 1);
         }
 
@@ -115,18 +122,33 @@ public class CompiledRoute implements Parcelable {
     }
 
     public String toString() {
-        return getConstantUrl() == null ?
-                (
-                        getAnchor() != null ?
-                                getRegex().toString() + "#" + getAnchor()
-                                : getRegex().toString()
-                )
-                : getConstantUrl();
+        String str = getConstantUrl() == null ? getRegex().toString() : getConstantUrl();
+        str += getAnchor() != null ? "#" + getAnchor() : "";
+        return str;
     }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    private boolean objectsCompare(Object object1, Object object2) {
+        return object1 == object2 ||
+                (
+                        object1 != null && object2 != null && object1.equals(object2)
+                );
+    }
+
+    public boolean equals(CompiledRoute compiledRoute) {
+        return objectsCompare(variables, compiledRoute.getVariables()) &&
+                objectsCompare(regex, compiledRoute.getRegex()) &&
+                objectsCompare(constantUrl, compiledRoute.getConstantUrl()) &&
+                objectsCompare(type, compiledRoute.getType()) &&
+                objectsCompare(activityClass, compiledRoute.getActivityClass()) &&
+                objectsCompare(proxyDestIdentify, compiledRoute.getProxyDestIdentify()) &&
+                objectsCompare(middlewares, compiledRoute.getMiddlewares()) &&
+                objectsCompare(anchor, compiledRoute.getAnchor()) &&
+                objectsCompare(schemes, compiledRoute.getSchemes());
     }
 
     @Override
@@ -136,20 +158,21 @@ public class CompiledRoute implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeList(variables);
+        parcel.writeStringList(variables);
         parcel.writeString(regex.toString());
         parcel.writeString(constantUrl);
         parcel.writeInt(type);
         parcel.writeString(activityClass);
         parcel.writeString(proxyDestIdentify);
-        parcel.writeList(middlewares);
+        parcel.writeStringList(middlewares);
         parcel.writeString(anchor);
-        parcel.writeList(schemes);
+        parcel.writeStringList(schemes);
     }
 
     protected CompiledRoute(Parcel in) {
         variables = in.createStringArrayList();
-        regex = Pattern.compile(in.readString());
+        String regexString = in.readString();
+        regex = regexString == null ? null : Pattern.compile(regexString);
         constantUrl = in.readString();
         type = in.readInt();
         activityClass = in.readString();

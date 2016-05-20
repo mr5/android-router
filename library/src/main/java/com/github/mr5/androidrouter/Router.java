@@ -89,9 +89,7 @@ public class Router {
         Intent intent = getIntent(url, bundle, context);
 
         if (intent != null) {
-            if (!(context instanceof Activity)) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
+
             context.startActivity(intent);
         }
     }
@@ -120,7 +118,7 @@ public class Router {
     }
 
 
-    protected Intent getIntent(String url, Bundle bundle, Context context) {
+    public Intent getIntent(String url, Bundle bundle, Context context) {
         Request request = urlMatcher.match(url);
         if (request.getCompiledRoute() == null) {
             if (mismatchedHandler != null) {
@@ -156,13 +154,14 @@ public class Router {
                 bundle.putString(queryKey, request.getPathVariables().get(queryKey));
             }
         }
-
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         request.setRefererClass(context.getClass().getName());
         bundle.putParcelable(BUNDLE_KEY_REQUEST, request);
         intent.putExtras(bundle);
         return intent;
     }
-
 
     public Request getRequest(Bundle bundle) {
         return bundle.getParcelable(BUNDLE_KEY_REQUEST);
@@ -176,7 +175,7 @@ public class Router {
         if (routerProxy == null) {
             return;
         }
-        String nextClassName = request.getCompiledRoute().getNextFragment(routerProxy.getClass().getName());
+        String nextClassName = request.getCompiledRoute().getNextMiddleware(routerProxy.getClass().getName());
         routerProxy.proxy(request, nextClassName);
     }
 }

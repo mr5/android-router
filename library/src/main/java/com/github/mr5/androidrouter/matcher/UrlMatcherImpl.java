@@ -27,7 +27,7 @@ public class UrlMatcherImpl implements UrlMatcher {
     public void addCompiledRoute(CompiledRoute route) {
         if (route.getConstantUrl() != null) {
             if (route.getSchemes() == null) {
-                constantsRoutes.put(Route.SCHEMA_ANY + "://" + route.getConstantUrl(), route);
+                constantsRoutes.put(Route.SCHEME_ANY + "://" + route.getConstantUrl(), route);
                 return;
             }
 
@@ -134,7 +134,7 @@ public class UrlMatcherImpl implements UrlMatcher {
                 }
                 List<String> routeSchemes = compiledRoute.getSchemes();
                 if (routeSchemes == null) {
-                    routeSchemes = Arrays.asList(Route.SCHEMA_ANY);
+                    routeSchemes = Arrays.asList(Route.SCHEME_ANY);
                 }
                 // Filter no anchor restricted route.
                 if (compiledRoute.getAnchor() == null) {
@@ -142,7 +142,7 @@ public class UrlMatcherImpl implements UrlMatcher {
                 }
                 // Certain anchor and matched
                 if (anchor.equals(compiledRoute.getAnchor())
-                        && routeSchemes.contains(scheme) || routeSchemes.contains(Route.SCHEMA_ANY)) {
+                        && routeSchemes.contains(scheme) || routeSchemes.contains(Route.SCHEME_ANY)) {
                     request.setCompiledRoute(compiledRoute)
                             .setPathVariables(parsePathVariables(compiledRoute, matcher));
                     return;
@@ -159,7 +159,7 @@ public class UrlMatcherImpl implements UrlMatcher {
             }
             List<String> routeSchemes = compiledRoute.getSchemes();
             if (routeSchemes == null) {
-                routeSchemes = Arrays.asList(Route.SCHEMA_ANY);
+                routeSchemes = Arrays.asList(Route.SCHEME_ANY);
             }
             // Filter anchor restricted route.
             if (compiledRoute.getAnchor() != null) {
@@ -183,7 +183,7 @@ public class UrlMatcherImpl implements UrlMatcher {
             }
             List<String> routeSchemes = compiledRoute.getSchemes();
             if (routeSchemes == null) {
-                routeSchemes = Arrays.asList(Route.SCHEMA_ANY);
+                routeSchemes = Arrays.asList(Route.SCHEME_ANY);
             }
             // Filter anchor restricted route.
             if (compiledRoute.getAnchor() != null) {
@@ -191,7 +191,7 @@ public class UrlMatcherImpl implements UrlMatcher {
             }
 
 
-            if (routeSchemes.contains(scheme) || routeSchemes.contains(Route.SCHEMA_ANY)) {
+            if (routeSchemes.contains(scheme) || routeSchemes.contains(Route.SCHEME_ANY)) {
                 request.setCompiledRoute(compiledRoute)
                         .setPathVariables(parsePathVariables(compiledRoute, matcher));
                 return;
@@ -208,7 +208,7 @@ public class UrlMatcherImpl implements UrlMatcher {
                 request.setCompiledRoute(constantsRoutes.get(searchKey));
                 return;
             }
-            searchKey = Route.SCHEMA_ANY + "://" + urlStr4match + "#" + anchor;
+            searchKey = Route.SCHEME_ANY + "://" + urlStr4match + "#" + anchor;
             if (constantsRoutes.containsKey(searchKey)) {
                 request.setCompiledRoute(constantsRoutes.get(searchKey));
                 return;
@@ -219,7 +219,7 @@ public class UrlMatcherImpl implements UrlMatcher {
             request.setCompiledRoute(constantsRoutes.get(searchKey));
             return;
         }
-        searchKey = Route.SCHEMA_ANY + "://" + urlStr4match;
+        searchKey = Route.SCHEME_ANY + "://" + urlStr4match;
         if (constantsRoutes.containsKey(searchKey)) {
             request.setCompiledRoute(constantsRoutes.get(searchKey));
             return;
