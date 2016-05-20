@@ -105,7 +105,7 @@ Router.getShared().openExternal("https://github.com");
 * Routes with variables;
 * Matching schemes;
 * Start from `3` when url has no anchor.
-* Fist added first matching when conflicts produced;
+* First added first matching when conflicts produced;
 
 priority:
 
