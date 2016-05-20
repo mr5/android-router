@@ -8,7 +8,7 @@
 ## Getting started
 To add a dependency using Gradle:
 ```groovy
-compile 'com.github.mr5:android-router:0.1.1-SNAPSHOT'
+compile 'com.github.mr5:android-router:0.1.2-SNAPSHOT'
 
 ```
 ## Initialization
@@ -41,7 +41,7 @@ Router.getShared().add(new Route("github.com/{vendor}/{repository}", Respository
 
 Router.getShared().add(new Route("{vendor}.github.io/", PagesActivity.class));
 
-// You can get variables from `Bundle` that in intent.
+// You can get value of variables from `Bundle` that in intent.
 
 ```
 
