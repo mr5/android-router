@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
                     String url = textView.getText().toString();
                     if (url.endsWith("openExternal")) {
                         Router.getShared().openExternal(url);
+                        return;
                     }
                     Router.getShared().open(url, view.getContext());
                 }

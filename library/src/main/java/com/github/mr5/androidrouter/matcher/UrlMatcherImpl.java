@@ -247,7 +247,7 @@ public class UrlMatcherImpl implements UrlMatcher {
                 e.printStackTrace();
             }
             try {
-                value = URLDecoder.decode(value, "UTF-8");
+                value = value == null ? null : URLDecoder.decode(value, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
