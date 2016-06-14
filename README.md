@@ -8,7 +8,7 @@
 ## Getting started
 To add a dependency using Gradle:
 ```groovy
-compile 'com.github.mr5:android-router:0.1.2-SNAPSHOT'
+compile 'com.github.mr5:android-router:0.1.3'
 
 ```
 ## Initialization

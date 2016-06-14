@@ -159,7 +159,7 @@ public class CompiledRoute implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeStringList(variables);
-        parcel.writeString(regex.toString());
+        parcel.writeString(regex == null ? null : regex.toString());
         parcel.writeString(constantUrl);
         parcel.writeInt(type);
         parcel.writeString(activityClass);

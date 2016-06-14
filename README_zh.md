@@ -6,7 +6,7 @@
 ## Getting started
 添加依赖
 ```groovy
-compile 'com.github.mr5:android-router:0.1.1-SNAPSHOT'
+compile 'com.github.mr5:android-router:0.1.3'
 
 ```
 ## 初始化路由

@@ -234,8 +234,13 @@ public class UrlMatcherImpl implements UrlMatcher {
         String[] params = query.split("&");
         Map<String, String> map = new HashMap<>();
         for (String param : params) {
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
+            String[] paramPair = param.split("=");
+            if (paramPair.length < 1) {
+                continue;
+            }
+            String name = paramPair[0];
+            String value = paramPair.length == 2 ? paramPair[1] : null;
+
             try {
                 name = URLDecoder.decode(name, "UTF-8");
             } catch (UnsupportedEncodingException e) {
