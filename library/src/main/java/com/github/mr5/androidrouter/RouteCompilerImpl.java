@@ -1,12 +1,12 @@
 package com.github.mr5.androidrouter;
 
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.code.regexp.Pattern;
-import com.google.code.regexp.Matcher;
 
 public class RouteCompilerImpl implements RouteCompiler {
 

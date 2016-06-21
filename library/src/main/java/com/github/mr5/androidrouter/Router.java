@@ -26,6 +26,7 @@ public class Router {
     public Router(UrlMatcher urlMatcher, RouteCompiler routeCompiler, Context context) {
         this.urlMatcher = urlMatcher;
         this.routeCompiler = routeCompiler;
+        this.context = context;
     }
 
     public Router(Context context) {
