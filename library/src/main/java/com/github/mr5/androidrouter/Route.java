@@ -27,6 +27,7 @@ public class Route {
     protected Map<String, String> queries = new HashMap<>();
     protected List<String> schemes;
     protected String proxyDestIdentify;
+    protected int weight;
 
     public Route(String path, Class<? extends Activity> activityClass, String[] schemes) {
         this.path = path;
@@ -79,6 +80,11 @@ public class Route {
      */
     public Route bind(String varName, String regex) {
         requirements.put(varName, sanitizeRequirement(varName, regex));
+        return this;
+    }
+
+    public Route bindWeight(int weight) {
+        this.weight = weight;
         return this;
     }
 

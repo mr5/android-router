@@ -1,7 +1,5 @@
 package com.github.mr5.samples.androidrouter;
 
-import android.app.Activity;
-
 import com.github.mr5.androidrouter.Router;
 
 import static com.github.mr5.androidrouter.Route.route;
@@ -16,8 +14,8 @@ public class Application extends android.app.Application {
 
         router.add("github.com/", MainActivity.class);
 
-        route("github.com/{vendor}", VendorActivity.class).bind("vendor", vendorPattern).addTo(router);
+        route("github.com/{vendor}", VendorActivity.class).bind("vendor", vendorPattern).bindWeight(10).addTo(router);
         route("github.com/{vendor}/{repository}", RepositoryActivity.class)
-                .bind("vendor", vendorPattern).bind("repository", repositoryPattern).addTo(router);
+                .bind("vendor", vendorPattern).bind("repository", repositoryPattern).bindWeight(19).addTo(router);
     }
 }

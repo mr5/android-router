@@ -3,6 +3,9 @@ package com.github.mr5.androidrouter.matcher;
 import android.util.Log;
 
 import com.github.mr5.androidrouter.CompiledRoute;
+import com.github.mr5.androidrouter.Request;
+import com.github.mr5.androidrouter.Route;
+import com.google.code.regexp.Matcher;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -13,10 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.github.mr5.androidrouter.Request;
-import com.github.mr5.androidrouter.Route;
-import com.google.code.regexp.Matcher;
 
 public class UrlMatcherImpl implements UrlMatcher {
     protected List<CompiledRoute> compiledRoutes = new ArrayList<>();
@@ -36,7 +35,15 @@ public class UrlMatcherImpl implements UrlMatcher {
             }
 
         } else {
-            compiledRoutes.add(route);
+            int position = compiledRoutes.size();
+            for (int i = position -1; i >= 0 ; i--) {
+                CompiledRoute item = compiledRoutes.get(i);
+                    if (item.getWeight() <= route.getWeight()) {
+                        position = i;
+                        break;
+                    }
+            }
+            compiledRoutes.add(position,route);
         }
     }
 

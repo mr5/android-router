@@ -3,10 +3,9 @@ package com.github.mr5.androidrouter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.google.code.regexp.Pattern;
+
+import java.util.List;
 
 public class CompiledRoute implements Parcelable {
     private List<String> variables;
@@ -18,6 +17,7 @@ public class CompiledRoute implements Parcelable {
     private List<String> middlewares;
     private String anchor;
     private List<String> schemes;
+    protected int weight;
 
     public CompiledRoute() {
     }
@@ -41,6 +41,14 @@ public class CompiledRoute implements Parcelable {
         this.type = type;
 
         return this;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public String getActivityClass() {
@@ -144,6 +152,7 @@ public class CompiledRoute implements Parcelable {
                 objectsCompare(regex, compiledRoute.getRegex()) &&
                 objectsCompare(constantUrl, compiledRoute.getConstantUrl()) &&
                 objectsCompare(type, compiledRoute.getType()) &&
+                objectsCompare(weight, compiledRoute.getWeight()) &&
                 objectsCompare(activityClass, compiledRoute.getActivityClass()) &&
                 objectsCompare(proxyDestIdentify, compiledRoute.getProxyDestIdentify()) &&
                 objectsCompare(middlewares, compiledRoute.getMiddlewares()) &&
@@ -162,6 +171,7 @@ public class CompiledRoute implements Parcelable {
         parcel.writeString(regex == null ? null : regex.toString());
         parcel.writeString(constantUrl);
         parcel.writeInt(type);
+        parcel.writeInt(weight);
         parcel.writeString(activityClass);
         parcel.writeString(proxyDestIdentify);
         parcel.writeStringList(middlewares);
@@ -175,6 +185,7 @@ public class CompiledRoute implements Parcelable {
         regex = regexString == null ? null : Pattern.compile(regexString);
         constantUrl = in.readString();
         type = in.readInt();
+        weight = in.readInt();
         activityClass = in.readString();
         proxyDestIdentify = in.readString();
         middlewares = in.createStringArrayList();

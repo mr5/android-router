@@ -13,6 +13,7 @@ public class RouteCompilerImpl implements RouteCompiler {
     public CompiledRoute compile(Route route) {
         CompiledRoute compiledRoute = new CompiledRoute();
 
+        compiledRoute.weight = route.weight;
         List<String> variables = detectVariables(route);
         compiledRoute.setVariables(variables);
         compiledRoute.setAnchor(route.getAnchor());
