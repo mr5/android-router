@@ -116,11 +116,6 @@ Router.getShared().openExternal("https://github.com");
 
 匹配 `github.com/site/terms` 这个 URL 时，按照上述列表的顺序会优先匹配到 `github.com/site/{site}`，因为它声明得更早，因此此类路由需要由你控制它们的匹配优先级。而匹配 `github.com/site/privacy` 这个 URL 时，会匹配到路由规则 `github.com/site/privacy` ，因为它没有包含任何变量，优先级最高，与定义顺序无关，不过此处的顺序此处仅为演示优先级，实际编码时，建议仍然按照匹配优先级来定义，即把它放到最顶部，以使代码更加清晰可读。
 
-### 匹配算法最大复杂度
-
-* 如命中无变量路由： O(1) * 4
-* 如命中有变量路由：O(1) * 4 + O(N) + O(M) * 3，N 为添加的路由个数，M 为 O(N) 复杂度段匹配到相同路由但 scheme 或 anchor 不同的路由个数
-
 
 ## ROADMAP
 - [ ] 优先匹配变量更多的路由；
